@@ -1,0 +1,66 @@
+# shellcheck shell=sh disable=SC3043
+
+_REMOTE="${_REMOTE:-github}"
+_G_USER="${_G_USER:-zhengqbbb}"
+____font_install_run() {
+    if [ -z "$(command -v git)" ];then
+        printf "\033[0;31m[qb]: Error git is not installed\033[0m\n"
+        return 1
+    fi
+    local _font_dir
+    local _source_path
+    _source_path="$( pwd )"
+    env git clone "https://${_REMOTE}.com/${_G_USER}/CascadiaForPowerline.git" "$_source_path/CascadiaForPowerline" || {
+        printf "\033[0;31m[qb]: Error git clone of CascadiaForPowerline repo failed\033[0m\n"
+        return 1
+    }
+    if test "$(uname)" = "Darwin" ; then
+        # MacOS
+        _font_dir="$HOME/Library/Fonts"
+    else
+        # Linux
+        _font_dir="$HOME/.local/share/fonts"
+        mkdir -p "$_font_dir"
+    fi
+    cp "$_source_path/CascadiaForPowerline/CascadiaCodePL.ttf" "$_font_dir/"
+    if which fc-cache >/dev/null 2>&1 ; then
+        printf "\033[1;33m[qb]: Resetting font cache, this may take a moment...\033[0m\n"
+        fc-cache -f "$_font_dir"
+    fi
+    printf "\033[1;32m[qb]: Cascadia Code PL installed to \033[4;33m$_font_dir\033[0m\n"
+    ____font_printf_settings
+}
+
+____font_printf_settings() {
+    printf "\n\033[1;32m%s\033[0m\n" "---- Now you need to manually set the terminal font ----"
+    printf "\033[1;33m%s \033[32m%s \033[4;33m%s\033[0m \033[1;32m%s\033[0m\n\n" \
+        "Windows(Need to install manually):" \
+        "open folder to find CascadiaCodePL.ttf:" \
+        "$_source_path" \
+        "Use the right click, Choose installation"
+    printf "\033[1;33m%s \033[32m%s\033[1;36m %s\033[0m\n" \
+        "Windows Terminal:" \
+        "Open settings,Find the default value in the right column, select the appearance, and then select the font" \
+        "\"Cascadia Code PL\""
+    printf "\033[1;33m%s \033[32m%s\033[1;36m %s\033[0m\n" \
+        "Mac Terminal:" \
+        "Use \`command + ,\` And then find font, Choose:" \
+        "\"Cascadia Code PL\""
+    printf "\033[1;33m%s \033[32m%s\033[1;36m %s\033[0m\n" \
+        "Ubuntu Terminal:" \
+        "Use mouse right click to open the setting(P), Find text, And then choose:" \
+        "\"Cascadia Code PL\""
+    printf "\033[1;33m%s \033[32m%s\033[1;36m %s\033[0m\n" \
+        "VSCode:" \
+        "Editor \`setting.json\` add json item" \
+        "\"terminal.integrated.fontFamily\": \"Cascadia Code PL\""
+    printf "\033[1;33m%s \033[32m%s\033[1;36m %s\033[0m\n" \
+        "iTerm2:" \
+        "Use \`command + ,\` Find Profiles - Text - Font, And then choose:" \
+        "\"Cascadia Code PL\""
+    printf "\n\033[1;36m%s\033[4;33m %s\033[0m\n" \
+        "More settings:"\
+        "https://github.com/Zhengqbbb/MonacoForPowerline/issues/1"
+}
+
+____font_install_run
