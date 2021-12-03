@@ -36,7 +36,7 @@ ____font_printf_settings() {
     printf "\033[1;33m%s \033[32m%s \033[4;33m%s\033[0m \033[1;32m%s\033[0m\n\n" \
         "Windows(Need to install manually):" \
         "open folder to find CascadiaCodePL.ttf:" \
-        "$_source_path" \
+        "$_source_path/CascadiaForPowerline" \
         "Use the right click, Choose installation"
     printf "\033[1;33m%s \033[32m%s\033[1;36m %s\033[0m\n" \
         "Windows Terminal:" \
